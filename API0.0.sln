@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "API0.0", "API0.0\API0.0.vcxproj", "{358637A1-EF81-4B1C-9103-C0C2621331DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{358637A1-EF81-4B1C-9103-C0C2621331DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{358637A1-EF81-4B1C-9103-C0C2621331DB}.Debug|Win32.Build.0 = Debug|Win32
+		{358637A1-EF81-4B1C-9103-C0C2621331DB}.Release|Win32.ActiveCfg = Release|Win32
+		{358637A1-EF81-4B1C-9103-C0C2621331DB}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
