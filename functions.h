@@ -6,6 +6,8 @@
 #include <string.h>
 #include <tchar.h>
 #include <cstdio>
+#include <fstream>
+#include <iostream>
 #include "resource.h"
 
 #include <CommCtrl.h> 
