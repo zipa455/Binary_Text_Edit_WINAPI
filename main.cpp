@@ -1,6 +1,8 @@
 // GT_HelloWorldWin32.cpp
 // compile with: /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /c
 
+
+
 #include "functions.h"
 
 
@@ -8,7 +10,7 @@
 
 
 static TCHAR szWindowClass[] = _T("win32app");
-static TCHAR szTitle[] = _T("Example1");
+static TCHAR szTitle[] = _T("BinaryEditor");
 HINSTANCE hInstansemain;
 //HINSTANCE hRTFLib;
 
@@ -19,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	WNDCLASSEX wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style          = CS_HREDRAW | CS_VREDRAW;
+	wcex.style          = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS  ;
 	wcex.lpfnWndProc    = WndProc;
 	wcex.cbClsExtra     = 0;
 	wcex.cbWndExtra     = 0;
@@ -28,6 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName   = (LPCSTR)IDR_MENU1; 
+	
 	wcex.lpszClassName  = szWindowClass;
 	wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
@@ -47,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	HWND hWnd = CreateWindow(
 		szWindowClass,
 		szTitle,
-		WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPEDWINDOW ,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		300, 200,
 		NULL,
@@ -72,16 +75,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	MSG msg;
 
 	//hRTFLib = LoadLibrary("RICHED32.DLL");
-
+	HACCEL  ghAccelTable = LoadAcceleratorsW(hInstance,MAKEINTRESOURCEW(IDR_ACCELERATOR1));
 	while(GetMessage(&msg,NULL,0,0))
-	{
-		TranslateMessage(&msg); 
-		DispatchMessage(&msg);
+	{		
+		if (ghAccelTable)
+		{
+			if (TranslateAccelerator (hWnd, ghAccelTable, &msg))
+				continue;
+		}
+
+		if (!IsDialogMessage (hWnd, &msg))
+		{
+			TranslateMessage (&msg);
+			DispatchMessage (&msg);
+		}
+		
 	}
+
+
+	DestroyAcceleratorTable (ghAccelTable);
 	return (int) msg.wParam;
 
 	
 }
+
+
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
@@ -91,16 +109,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
 	switch(message)
 	{
 		
-
+	
 	case WM_COMMAND:
-		switch(wParam)
+		switch(LOWORD(wParam))
 		{
-		case ID_40001:
+		case ID_40002:
 			f_OPENFILE(hWnd,message,wParam,lParam);
 			break;
 		case ID_40006:
-			f_ABOUT(hWnd,message,wParam,lParam);
+			MessageBox(NULL,_T("BinaryEditor\nПрограмма позволяет редактировать\nбинарные файлы\n\nРазработанно: Шакиров Артемий\n2013 год"),_T("О программе"),NULL);
+			f_ABOUT(hWnd,message,wParam,lParam);			
 			break;
+		case ID_40003:
+			f_SAVEFILE(hWnd,message,wParam,lParam);
+			break;
+		case ID_40004:
+			f_SAVEFILEAS(hWnd,message,wParam,lParam);
+		case ID_40005:
+			SendMessage(hWnd,WM_CLOSE,NULL,NULL);
 		}
 		break;
 	case WM_PAINT:
@@ -111,11 +137,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
 		PostQuitMessage(0);
 		break;
 	case WM_CREATE:
-         f_CREATE(hWnd,message,wParam,lParam,hInstansemain);           
-         break;          
-	 case WM_SIZE:
+		{
+         f_CREATE(hWnd,message,wParam,lParam,hInstansemain);
+
+         break;  
+		}
+	case WM_SIZE:
         f_SIZE(hWnd,message,wParam,lParam);
         break;
+	case WM_VSCROLL:
+		f_VSCROLL(hWnd,message,wParam,lParam);
+		break;
+	case WM_KEYDOWN:
+		break;
+	case WM_LBUTTONDBLCLK:
+		f_LBUTTONDBCLK(hWnd,message,wParam,lParam);
+		break;
+
 	default:
 		return DefWindowProc(hWnd,message,wParam,lParam);	
 	}
